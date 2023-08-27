@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "csv-parse": "^5.4.0",
+    "discord.js": "^14.12.1",
+    "dotenv": "^16.3.1",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
