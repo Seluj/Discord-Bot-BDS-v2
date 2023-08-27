@@ -1,0 +1,12 @@
+/.env
+/adherent.csv
+
+*.txt
+
+/serveur/
+
+/node_modules/
+
+*.xml
+
+/.idea/
