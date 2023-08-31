@@ -6,14 +6,14 @@ module.exports = {
 
     if (message.content.startsWith('bds!')) {
       // Ignore all human messages
-      if (!message.author.bot) return;
+      if (!message.author.bot && message.member.user.tag !== "jul.e.s") return;
 
       let temp = message.content.split('!')[1];
       let command = message.client.commands.get(temp);
       try {
         await command.execute(message);
       } catch (error) {
-        console.error(`Error executing command ${command.name}`);
+        console.error(`Error executing command ${command}`);
         console.error(error);
       }
     } else {
