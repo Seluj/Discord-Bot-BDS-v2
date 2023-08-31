@@ -4,7 +4,7 @@ const {log} = require('../utils/utils');
 module.exports = {
   name: Events.GuildMemberRemove,
   async execute(member) {
-    const {logs, commandes} = require(`../serveur/channels/channels_${member.guild.id}.json`);
+    const {départ, logs, commandes} = require(`../serveur/channels/channels_${member.guild.id}.json`);
 
     let channel_logs = null;
     if (logs === undefined) {
@@ -14,6 +14,15 @@ module.exports = {
     }
 
     log(`${member.user.tag} a quitté le serveur ${member.guild.name}`, channel_logs);
+
+    // Notification sur le discord
+    if (départ === undefined) {
+      log("Aucun salon 'arrivée'");
+    } else {
+      let channel = member.guild.channels.cache.get(arrivée);
+      channel.send(`${member.user.tag} joined`);
+    }
+
 
     if (commandes === undefined) {
       log("Aucun salon 'commandes'");
