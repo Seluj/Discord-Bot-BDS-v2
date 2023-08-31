@@ -1,5 +1,4 @@
 const {SlashCommandBuilder, AttachmentBuilder} = require('discord.js');
-const {readFile} = require("fs");
 const {log, checkRole} = require("../utils/utils");
 
 module.exports = {
@@ -43,9 +42,11 @@ module.exports = {
       Bots,
       ESTA,
       Bannis_inscriptions,
+      exception,
       everyone
     } = require(`../serveur/roles/role_${interaction.guild.id}.json`);
 
+    // -------------------------- Rôle à ne pas supprimer -------------------------- //
     array.splice(array.indexOf(Admin_Discord), 1);
     array.splice(array.indexOf(Membre_du_Bureau), 1);
     array.splice(array.indexOf(Bureau_Restreints), 1);
@@ -54,6 +55,7 @@ module.exports = {
     array.splice(array.indexOf(Bots), 1);
     array.splice(array.indexOf(ESTA), 1);
     array.splice(array.indexOf(Bannis_inscriptions), 1);
+    array.splice(array.indexOf(exception), 1);
     array.splice(array.indexOf(everyone), 1);
 
     interaction.guild.members.fetch()
@@ -61,6 +63,8 @@ module.exports = {
         membersList = members.map(m => m);
 
         for (let i = 0; i < membersList.length; i++) {
+
+          // -------------------------- Exception List -------------------------- //
           if (checkRole(membersList[i], Membre_du_Bureau))
             continue;
           if (checkRole(membersList[i], Bureau_Restreints))
