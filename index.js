@@ -5,7 +5,11 @@ const {getFiles} = require('./utils/utils');
 dotenv = require('dotenv');
 dotenv.config();
 
-const client = new Client({intents: [3276799], partials: [Partials.Channel]});
+const client = new Client({
+  intents: [3276799],
+  partials: [Partials.Channel],
+  allowedMentions: {parse: ['users', 'roles']}
+});
 
 // Commands
 client.commands = new Collection();
