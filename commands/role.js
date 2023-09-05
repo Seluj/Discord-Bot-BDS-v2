@@ -26,9 +26,9 @@ module.exports = {
         membersList,        // Les informations des membres
         studentName,        // Le nom et le prénom d'un étudiant (prénom nom)
         pseudoDiscord,      //
-        nbCotisant,         //
-        nbNonCotisant,      //
-        nbMembres;          //
+        nbCotisant = 0,     //
+        nbNonCotisant = 0,  //
+        nbMembres = 0;      //
 
       // Récupération des IDs des rôles
       const {
