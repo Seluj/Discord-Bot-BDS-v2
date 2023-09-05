@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, PermissionFlagsBits  } = require('discord.js');
-const { parseCSVFiles, affichageJoueur, checkDate, log} = require("../utils/utils");
+const {SlashCommandBuilder, PermissionFlagsBits} = require('discord.js');
+const {parseCSVFiles, affichageJoueur, checkDate, log} = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -34,7 +34,7 @@ module.exports = {
     let nb = 0;     // Nombre d'étudiants trouvé
 
 
-    const { logs } = require(`../serveur/channels/channels_${interaction.guild.id}.json`);
+    const {logs} = require(`../serveur/channels/channels_${interaction.guild.id}.json`);
 
     let channel_logs = null;
     if (logs === undefined) {
@@ -45,32 +45,32 @@ module.exports = {
 
     //Construction du résultat en fonction du nom ou du prénom
 
-      // Test pour la subCommand "prenom"
+    // Test pour la subCommand "prenom"
     if (interaction.options.getSubcommand() === "prénom") {
       opt = interaction.options.getString('prénom');
       await interaction.reply({content: `Recherche du prénom : ${opt}`, ephemeral: true});
       opt = opt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      for (let i=0; i<etudiant.length; i++) {
+      for (let i = 0; i < etudiant.length; i++) {
         data = etudiant[i][1];
         data = data.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         if (data === opt) {
           str += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
-          nb ++;
+          nb++;
         }
       }
 
       // Test pour la subCommand "nom"
     } else if (interaction.options.getSubcommand() === "nom") {
       opt = interaction.options.getString('nom');
-      await interaction.reply({content: `Recherche du nom : ${opt}`, ephemeral:true});
+      await interaction.reply({content: `Recherche du nom : ${opt}`, ephemeral: true});
       log(`Recherche du nom : ${opt}`, channel_logs);
       opt = opt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      for (let i=0; i<etudiant.length; i++) {
+      for (let i = 0; i < etudiant.length; i++) {
         data = etudiant[i][0];
         data = data.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         if (data === opt) {
           str += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
-          nb ++;
+          nb++;
         }
       }
     }
