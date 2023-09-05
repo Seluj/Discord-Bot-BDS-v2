@@ -47,6 +47,8 @@ module.exports = {
 
       nbNonCotisant = membersDisplayName.length;
 
+      await interaction.followUp(`En cours de traitement...`);
+
       for (let i = 0; i < membersID.length; i++) {
         if (checkRole(membersList[i], Membre_du_Bureau))
           continue;
@@ -71,6 +73,7 @@ module.exports = {
           if (checkDate(etudiant[j][2]) === true) {
             membersList[i].roles.add(Cotisants);
             membersList[i].roles.remove(Attente_Cotisant);
+            nbCotisant++;
             nbNonCotisant--;
           }
         }
@@ -83,7 +86,7 @@ module.exports = {
       membersDisplayName = membersWithRole.map(m => m.displayName);
       membersList = membersWithRole.map(m => m);
 
-      nbCotisant = membersDisplayName.length;
+      nbCotisant += membersDisplayName.length;
 
       for (let i = 0; i < membersID.length; i++) {
         if (checkRole(membersList[i], Membre_du_Bureau))
@@ -110,11 +113,13 @@ module.exports = {
             membersList[i].roles.add(Attente_Cotisant);
             membersList[i].roles.remove(Cotisants);
             nbCotisant--;
+            nbNonCotisant++;
           }
         } else {
           membersList[i].roles.add(Attente_Cotisant);
           membersList[i].roles.remove(Cotisants);
           nbCotisant--;
+          nbNonCotisant++;
         }
       }
 
