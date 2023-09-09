@@ -74,11 +74,12 @@ function checkCharacter(name, characters) {
  * @returns {boolean} true si la date est plus grande que celle courante false sinon
  */
 function checkDate(date) {
+  /*
   let tmp = date.split(' ');
   if (tmp[0] === "")
     return false;
-
-  tmp = tmp[0].split('-');
+  */
+  let tmp = date.split('-');
   let year_cotis = tmp[0];
   let month_cotis = tmp[1];
   let day_cotis = tmp[2];
