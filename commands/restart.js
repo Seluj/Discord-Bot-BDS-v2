@@ -1,4 +1,4 @@
-const {SlashCommandBuilder, AttachmentBuilder, messageLink} = require('discord.js');
+const {SlashCommandBuilder} = require('discord.js');
 const {log} = require('../utils/utils');
 
 
@@ -34,10 +34,5 @@ module.exports = {
     }
 
     interaction.reply({content: response, ephemeral: false});
-
-    setInterval(function () {
-      channel.send("bds!stats!autoupdate")
-      channel.send("I am updating every 10 hours")
-    }, 10 * 3600000);
   },
 };

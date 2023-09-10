@@ -15,7 +15,6 @@ module.exports = {
     // Variables
     let displayName; // Nom d'affichage de l'étudiant
     let opt;        // option : option entrée par l'utilisateur
-    let data;       // information à comparer avec l'option, récupérée dans le fichier des étudiants
     let str = "";   // Résultat final avec tous les étudiants qui correspondent à la recherche
     let nb = 0;     // Nombre d'étudiants trouvé
 
