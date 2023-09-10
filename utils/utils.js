@@ -138,6 +138,19 @@ function affichageJoueur(joueur, boolean) {
   return returned;
 }
 
+function affichageMembre(membre) {
+  let returned;
+  returned = `__${membre.displayName}__:\n`;
+  let roleName = "";
+  membre.roles.cache.map(role => {
+    if (role.name !== "@everyone")
+      roleName += `> ${role}\n`;
+  })
+  returned += `Roles:\n${roleName}`;
+  returned += `\n`;
+  return returned;
+}
+
 /**
  * Modifie les caractères non-désirés : espace et -
  * @param string chaine à modifier
@@ -251,4 +264,5 @@ module.exports = {
   checkName,
   log,
   getFiles,
+  affichageMembre
 };
