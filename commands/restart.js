@@ -33,6 +33,6 @@ module.exports = {
       channel = interaction.guild.channels.cache.get(commandes);
     }
 
-    interaction.reply({content: response, ephemeral: false});
+    interaction.reply({content: response, ephemeral: true});
   },
 };
