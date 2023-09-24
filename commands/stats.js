@@ -1,5 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {checkRole} = require("../utils/utils");
+const {checkRole, getRndInteger} = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -34,15 +34,21 @@ module.exports = {
         // Calcul du nombre de membres non renommés
         nb_reste = nb_total - (nb_coti + nb_non_coti + nb_esta + nb_bot);
 
+        const cotisant = getRndInteger(1, 52);
+        const nomCotisant = getRndInteger(53, 63);
+        const emojis = require(`../emoji.json`);
+        const emojiCotisant = emojis[cotisant];
+        const emojiNonCotisant = emojis[nomCotisant];
+
         // Envoi du message
         interaction.reply(`Sur **${nb_total}** membres:\n> **${nb_coti}** sont cotisants\n> **${nb_non_coti}** sont non cotisants\n> **${nb_reste}** ne sont pas renommés\n> **${nb_esta}** sont de l'ESTA\n> **${nb_bot}** sont des bots\nMerci !`);
 
         // Mise à jour des noms des channels
         let channel = interaction.guild.channels.cache.get('1069747433950683208');
-        channel.setName(`🏃 Cotisants : ${nb_coti}`);
+        channel.setName(`${emojiCotisant} Cotisants : ${nb_coti}`);
 
         channel = interaction.guild.channels.cache.get('1069748971100196986');
-        channel.setName(`🌴 Non Cotisants : ${nb_non_coti}`);
+        channel.setName(`${emojiNonCotisant} Non Cotisants : ${nb_non_coti}`);
 
         channel = interaction.guild.channels.cache.get('1069934157662277723');
         channel.setName(`💀 Unknown : ${nb_reste}`);
