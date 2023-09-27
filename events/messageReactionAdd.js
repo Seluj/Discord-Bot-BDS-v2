@@ -57,7 +57,7 @@ module.exports = {
               await member.roles.add(Attente_Cotisant);
               logString += " et est Attente_Cotisant.";
             } else {                                // Sinon, on envoie un message
-              await member.send("Salut, je crois que tu n'as pas bien lu, renomme toi correctement Prénom Nom, sans ta promo et sans ton surnom !!");
+              await member.send("Salut, je crois que tu n'as pas bien lu, renomme toi correctement Prénom Nom, sans ta promo et sans ton surnom !!").catch(() => console.log("Impossible d'envoyer un message à " + member.displayName));
               await reaction.users.remove(member.id);
               logString += ` et n'est pas bien renommé.`;
             }
