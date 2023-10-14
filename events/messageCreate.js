@@ -22,7 +22,7 @@ module.exports = {
       if (message.author.bot) return;
       if (!message.guild) {
         message.reply('Je ne suis pas encore prêt pour les messages privés, désolé !');
-        log("Message privé de " + message.member.user.tag + " contenu : " + message.content);
+        log("Message privé de " + message.author.username + " contenu : " + message.content);
       } else {
         const {attribution_sports} = require(`../serveur/channels/channels_${message.guild.id}.json`);
 
