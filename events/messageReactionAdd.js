@@ -67,8 +67,7 @@ module.exports = {
       } else {
         await reaction.users.remove(user.id);
       }
+      log(logString, channel_logs);
     }
-
-    log(logString, channel_logs);
   },
 };
