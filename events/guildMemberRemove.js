@@ -19,10 +19,9 @@ module.exports = {
     if (départ === undefined) {
       log("Aucun salon 'arrivée'");
     } else {
-      let channel = member.guild.channels.cache.get(arrivée);
+      let channel = member.guild.channels.cache.get(départ);
       channel.send(`${member.user.tag} joined`);
     }
-
 
     if (commandes === undefined) {
       log("Aucun salon 'commandes'");
