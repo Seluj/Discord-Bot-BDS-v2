@@ -20,7 +20,7 @@ module.exports = {
       log("Aucun salon 'arrivée'");
     } else {
       let channel = member.guild.channels.cache.get(départ);
-      channel.send(`${member.user.tag} joined`);
+      channel.send(`${member.user.tag} Left...:cry:`);
     }
 
     if (commandes === undefined) {
