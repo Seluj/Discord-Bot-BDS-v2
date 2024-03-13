@@ -275,6 +275,20 @@ function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function sanitizeString(str) {
+  str = str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return str;
+}
+
+function toChannelName(str) {
+  let returnedString = "__" + str.replace(/\s/g, "-").replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase();
+  if (returnedString.length > 50) {
+    returnedString = returnedString.substring(0, 50);
+  }
+  returnedString += "__";
+  return returnedString;
+}
+
 module.exports = {
   checkDate,
   affichageJoueur,
@@ -286,5 +300,7 @@ module.exports = {
   log,
   getFiles,
   affichageMembre,
-  getRndInteger
+  getRndInteger,
+  sanitizeString,
+  toChannelName
 };

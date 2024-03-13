@@ -1,5 +1,40 @@
-const {Events} = require('discord.js');
-const {log, checkName, checkRole} = require('../utils/utils');
+const {Events, PermissionFlagsBits} = require('discord.js');
+const {log, checkName, checkRole, toChannelName} = require('../utils/utils');
+
+async function makeChannelIfNotExistAndSendMessage(guild, user, message, log = null, channelLog = null) {
+  let channelName = toChannelName(user.tag);
+  let createdChannel = guild.channels.cache.find(channel => channel.name === channelName);
+  let created = false;
+  if (!createdChannel) {
+    createdChannel = await guild.channels
+        .create(
+            {
+              name: channelName,
+              type: '0',
+              parentId: '754741001469558804',
+              permissionOverwrites: [{
+                id: user.id,
+                allow: [PermissionFlagsBits.ViewChannel],
+              },
+                {
+
+                  id: guild.id,
+                  deny: [PermissionFlagsBits.ViewChannel],
+                },
+              ],
+            });
+    created = true;
+  }
+  createdChannel.send(`${message}\n${user}\nCe channel s'autodétruira dans 90 secondes.`);
+  if (created) {
+    let timeout = setTimeout(function () {
+      if (log != null)
+        log(`${createdChannel.name}, ${createdChannel.id} deleted`, channelLog);
+      createdChannel.delete();
+    }, 90000);
+  }
+  return createdChannel.name;
+}
 
 module.exports = {
   name: Events.MessageReactionAdd,
@@ -47,7 +82,9 @@ module.exports = {
 
           // On regarde si la personne est un membre du bureau
           if (checkRole(member, Membre_du_Bureau)) {  // Si oui, on envoie un petit message personalisé et on quitte la fonction
-            await member.send("Hop hop, camarade du bureau en escapade botique !\nReviens en mode " + member.displayName.split(' - ')[1] + ", le bot est jaloux de ton attention !\n");
+            let message = "Hop hop, camarade du bureau en escapade botique !\nReviens en mode " + member.displayName.split(' - ')[1] + ", le bot est jaloux de ton attention !\n"
+            makeChannelIfNotExistAndSendMessage(reaction.message.guild, user, message, log, channel_logs)
+                .then(r => log(`Channel ${r} créé`, channel_logs));
             await reaction.users.remove(member.id);
             logString += " et est un membre du bureau.";
           } else {
@@ -57,13 +94,14 @@ module.exports = {
               await member.roles.add(Attente_Cotisant);
               logString += " et est Attente_Cotisant.";
             } else {                                // Sinon, on envoie un message
-              await member.send("Salut, je crois que tu n'as pas bien lu, renomme toi correctement Prénom Nom, sans ta promo et sans ton surnom !!").catch(() => console.log("Impossible d'envoyer un message à " + member.displayName));
+              let message = "Salut, je crois que tu n'as pas bien lu, renomme toi correctement Prénom Nom, sans ta promo et sans ton surnom !!";
+              makeChannelIfNotExistAndSendMessage(reaction.message.guild, user, message)
+                  .then(r => log(r, channel_logs));
               await reaction.users.remove(member.id);
               logString += ` et n'est pas bien renommé.`;
             }
           }
         }
-
       } else {
         await reaction.users.remove(user.id);
       }
