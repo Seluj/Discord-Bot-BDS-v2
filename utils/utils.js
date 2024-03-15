@@ -280,6 +280,12 @@ function sanitizeString(str) {
   return str;
 }
 
+function removeAllNonLetter(str) {
+  str = sanitizeString(str);
+  str = str.replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "");
+  return str;
+}
+
 function toChannelName(str) {
   let returnedString = "__" + str.replace(/\s/g, "-").replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase();
   if (returnedString.length > 50) {
@@ -302,5 +308,6 @@ module.exports = {
   affichageMembre,
   getRndInteger,
   sanitizeString,
+  removeAllNonLetter,
   toChannelName
 };
