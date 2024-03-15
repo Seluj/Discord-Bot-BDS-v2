@@ -280,6 +280,12 @@ function sanitizeString(str) {
   return str;
 }
 
+function removeAllNonLetter(str) {
+  str = sanitizeString(str);
+  str = str.replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "");
+  return str;
+}
+
 function toChannelName(str) {
   let returnedString = "__" + str.replace(/\s/g, "-").replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase();
   if (returnedString.length > 50) {
@@ -287,6 +293,18 @@ function toChannelName(str) {
   }
   returnedString += "__";
   return returnedString;
+}
+
+function countNumberOfWordsInDictionary(str, dictionary) {
+  let count = 0;
+  let words = str.split(' ');
+  for (let word of words) {
+    let sanitizedWord = removeAllNonLetter(word);
+    if (dictionary[0].includes(sanitizedWord)) {
+      count += dictionary[1][dictionary[0].indexOf(sanitizedWord)];
+    }
+  }
+  return count;
 }
 
 module.exports = {
@@ -302,5 +320,7 @@ module.exports = {
   affichageMembre,
   getRndInteger,
   sanitizeString,
-  toChannelName
+  removeAllNonLetter,
+  toChannelName,
+  countNumberOfWordsInDictionary
 };
