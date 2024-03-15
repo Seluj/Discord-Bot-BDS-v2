@@ -295,6 +295,18 @@ function toChannelName(str) {
   return returnedString;
 }
 
+function countNumberOfWordsInDictionary(str, dictionary) {
+  let count = 0;
+  let words = str.split(' ');
+  for (let word of words) {
+    let sanitizedWord = removeAllNonLetter(word);
+    if (dictionary[0].includes(sanitizedWord)) {
+      count += dictionary[1][dictionary[0].indexOf(sanitizedWord)];
+    }
+  }
+  return count;
+}
+
 module.exports = {
   checkDate,
   affichageJoueur,
@@ -309,5 +321,6 @@ module.exports = {
   getRndInteger,
   sanitizeString,
   removeAllNonLetter,
-  toChannelName
+  toChannelName,
+  countNumberOfWordsInDictionary
 };
