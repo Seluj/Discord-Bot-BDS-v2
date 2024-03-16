@@ -13,7 +13,7 @@ module.exports = {
 
     let replyMessage =
         "Bonjour, il semblerait que vous ayez un problème de rôle sur le discord. Si c'est le cas:" +
-        "\n- Si ça fait plus de 4 jours que vous attendez, contactez '@Jules - Respo Info'" +
+        "\n- Si ça fait plus de 4 jours que vous attendez, contactez '@Jules - Respo Info' en MP" +
         "\n- Sinon patientez." +
         "\nSi le problème n'est pas celui la, vous pouvez toujours le contacter" +
         "\n\nMerci !";
@@ -54,12 +54,10 @@ module.exports = {
 
         } else if (numberOfWords <= 8) {
           if (numberOfWordsInDictionary/numberOfWords > 0.5) {
-            if (!message.author.bot && message.member.user.tag !== "jul.e.s") return;
             await message.reply(replyMessage);
           }
         } else {
           if (numberOfWordsInDictionary/numberOfWords > 0.25) {
-            if (!message.author.bot && message.member.user.tag !== "jul.e.s") return;
             await message.reply(replyMessage);
           }
         }
