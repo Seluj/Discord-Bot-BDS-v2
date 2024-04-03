@@ -104,7 +104,7 @@ module.exports = {
           },
           {
             name: "Point info",
-            value: "Vous ne pouvez pas vous tromper: la commande s'autocomplète, si toute fois vous avez un problème vous pouvez toujours contacter:\n**Jules - Respo Discord**",
+            value: "Vous ne pouvez pas vous tromper: la commande s'autocomplète, si toute fois vous avez un problème vous pouvez toujours contacter : **Jules - Respo Info**",
             inline: false
           }
         ]

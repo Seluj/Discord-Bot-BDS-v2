@@ -1,7 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {Client, Collection, Partials} = require('discord.js');
-const {getFiles} = require('./utils/utils');
 dotenv = require('dotenv');
 dotenv.config();
 
@@ -26,7 +25,6 @@ for (const file of commandFiles) {
 // Events
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
-
 
 for (const file of eventFiles) {
   const filePath = path.join(eventsPath, file);

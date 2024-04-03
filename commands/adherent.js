@@ -1,5 +1,5 @@
 const {SlashCommandBuilder, PermissionFlagsBits} = require('discord.js');
-const {parseCSVFiles, affichageJoueur, checkDate, log} = require("../utils/utils");
+const {parseCSVFiles, affichageJoueur, checkDate, log, sanitizeString } = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -28,10 +28,10 @@ module.exports = {
     // Liste des étudiants contenus dans le fichier donné
     let etudiant = parseCSVFiles("./adherent.csv", ";");
     // Variables
-    let opt;        // option : option entrée par l'utilisateur
+    let option;        // option : option entrée par l'utilisateur
     let data;       // information à comparer avec l'option, récupérée dans le fichier des étudiants
-    let str = "";   // Résultat final avec tous les étudiants qui correspondent à la recherche
-    let nb = 0;     // Nombre d'étudiants trouvé
+    let finalResultString = "";   // Résultat final avec tous les étudiants qui correspondent à la recherche
+    let numberOfStudentFind = 0;     // Nombre d'étudiants trouvé
 
 
     const {logs} = require(`../serveur/channels/channels_${interaction.guild.id}.json`);
@@ -47,41 +47,39 @@ module.exports = {
 
     // Test pour la subCommand "prenom"
     if (interaction.options.getSubcommand() === "prénom") {
-      opt = interaction.options.getString('prénom');
-      await interaction.reply({content: `Recherche du prénom : ${opt}`, ephemeral: true});
-      opt = opt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      option = interaction.options.getString('prénom');
+      await interaction.reply({content: `Recherche du prénom : ${option}`, ephemeral: true});
+      option = sanitizeString(option);
       for (let i = 0; i < etudiant.length; i++) {
-        data = etudiant[i][1];
-        data = data.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        if (data === opt) {
-          str += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
-          nb++;
+        data = sanitizeString(etudiant[i][1]);
+        if (data.includes(option)) {
+          finalResultString += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
+          numberOfStudentFind++;
         }
       }
 
       // Test pour la subCommand "nom"
     } else if (interaction.options.getSubcommand() === "nom") {
-      opt = interaction.options.getString('nom');
-      await interaction.reply({content: `Recherche du nom : ${opt}`, ephemeral: true});
-      log(`Recherche du nom : ${opt}`, channel_logs);
-      opt = opt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      option = interaction.options.getString('nom');
+      await interaction.reply({content: `Recherche du nom : ${option}`, ephemeral: true});
+      log(`Recherche du nom : ${option}`, channel_logs);
+      option = sanitizeString(option);
       for (let i = 0; i < etudiant.length; i++) {
-        data = etudiant[i][0];
-        data = data.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        if (data === opt) {
-          str += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
-          nb++;
+        data = sanitizeString(etudiant[i][0]);
+        if (data.includes(option)) {
+          finalResultString += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
+          numberOfStudentFind++;
         }
       }
     }
-    str += `Nombre trouvé : ${nb}`;
+    finalResultString += `Nombre trouvé : ${numberOfStudentFind}`;
 
     // Contrôle de la longueur puisque discord limite à 2000 caractères
-    let str_length = str.length;
+    let str_length = finalResultString.length;
     let tmp_str = [];
     let divide_number = Math.trunc(str_length / 2000) + 1;
     for (let i = 0; i < divide_number; i++) {
-      tmp_str[i] = str.slice((str_length / divide_number) * i, (str_length / divide_number) * (i + 1));
+      tmp_str[i] = finalResultString.slice((str_length / divide_number) * i, (str_length / divide_number) * (i + 1));
     }
 
     // Écriture du résultat
