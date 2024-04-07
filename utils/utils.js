@@ -307,6 +307,20 @@ function countNumberOfWordsInDictionary(str, dictionary) {
   return count;
 }
 
+function getDbDate(table) {
+  let dbDate;
+  let find = false;
+  let i = 0;
+  do {
+    if(table[i][1] === "Base de données") {
+      dbDate = table[i][2];
+      find = true;
+    }
+    i++;
+  } while (!find && i < table.length);
+  return dbDate;
+}
+
 module.exports = {
   checkDate,
   affichageJoueur,
@@ -322,5 +336,6 @@ module.exports = {
   sanitizeString,
   removeAllNonLetter,
   toChannelName,
-  countNumberOfWordsInDictionary
+  countNumberOfWordsInDictionary,
+  getDbDate
 };

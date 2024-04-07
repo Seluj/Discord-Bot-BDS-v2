@@ -1,5 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {parseCSVFiles, checkDate, checkRole} = require("../utils/utils");
+const {parseCSVFiles, checkDate, getDbDate, checkRole} = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,9 +14,16 @@ module.exports = {
   async execute(interaction) {
 
     //Variables
-    await interaction.deferReply();
     let roleId = interaction.options.getRole('role_id');
     let etudiant = parseCSVFiles("./adherent.csv", ";");
+    await interaction.deferReply();
+
+    let dbDate = getDbDate(etudiant);
+    if (dbDate === null || dbDate === undefined) {
+      dbDate = "**<Unknown>**";
+    } else {
+      dbDate = `**${dbDate}**`;
+    }
 
     // Si l'option roleId n'est pas donnée
     if (roleId === null) {
@@ -125,7 +132,7 @@ module.exports = {
 
       nbMembres = interaction.guild.memberCount;
 
-      await interaction.followUp(`Sur **${nbMembres}** membres:\n> **${nbCotisant}** sont cotisants\n> **${nbNonCotisant}** sont non cotisants\nMerci !`);
+      await interaction.followUp(`Sur **${nbMembres}** membres:\n> **${nbCotisant}** sont cotisants\n> **${nbNonCotisant}** sont non cotisants\nDate de la base : ${dbDate}\nMerci !`);
 
 
     } else {
@@ -137,7 +144,7 @@ module.exports = {
             if (checkRole(membersList[i], roleId.id))
               nbTotal++;
           }
-          interaction.editReply(`Il y a ${nbTotal} membres avec le role "${roleId.name}"`);
+          interaction.editReply(`Il y a ${nbTotal} membres avec le role "${roleId.name}\nDate de la base : ${dbDate}"`);
         })
         .catch(console.error);
     }
