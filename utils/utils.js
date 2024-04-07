@@ -149,9 +149,9 @@ function affichageJoueur(joueur, boolean) {
     date[0] = "null";
   }
   if (boolean === true) {
-    returned = `__Trouvé__:\n> **Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${date[0]}**\n`;
+    returned = `__Trouvé__:\n> **Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${convertDate(date[0])}**\n`;
   } else {
-    returned = `__Trouvé__:\n> Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${date[0]}\n`;
+    returned = `__Trouvé__:\n> Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${convertDate(date[0])}\n`;
   }
   return returned;
 }
@@ -318,7 +318,15 @@ function getDbDate(table) {
     }
     i++;
   } while (!find && i < table.length);
-  return dbDate;
+  return convertDate(dbDate);
+}
+
+function convertDate(date) {
+  let tmp = date.split('-');
+  let year = tmp[0];
+  let month = tmp[1];
+  let day = tmp[2];
+  return `${day}/${month}/${year}`;
 }
 
 module.exports = {
@@ -337,5 +345,6 @@ module.exports = {
   removeAllNonLetter,
   toChannelName,
   countNumberOfWordsInDictionary,
-  getDbDate
+  getDbDate,
+  convertDate
 };
