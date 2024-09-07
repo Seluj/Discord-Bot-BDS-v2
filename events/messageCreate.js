@@ -54,11 +54,13 @@ module.exports = {
 
         } else if (numberOfWords <= 8) {
           if (numberOfWordsInDictionary/numberOfWords > 0.5) {
-            await message.reply(replyMessage);
+            // TODO: Put back
+            //await message.reply(replyMessage);
           }
         } else {
           if (numberOfWordsInDictionary/numberOfWords > 0.25) {
-            await message.reply(replyMessage);
+            // TODO: Put back
+            //await message.reply(replyMessage);
           }
         }
       }
