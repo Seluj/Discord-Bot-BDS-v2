@@ -65,12 +65,12 @@ module.exports = {
           continue;
 
         pseudoDiscord = membersDisplayName[i];
-        pseudoDiscord = pseudoDiscord.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        pseudoDiscord = pseudoDiscord.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("---", "-").replace("--", "-");
         let j = 0;
         let trouve = false;
         while (j < etudiant.length && trouve === false) {
           studentName = etudiant[j][1] + ' ' + etudiant[j][0];
-          studentName = studentName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          studentName = studentName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("---", "-").replace("--", "-");
           if (studentName === pseudoDiscord)
             trouve = true;
           else
