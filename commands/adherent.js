@@ -1,5 +1,5 @@
 const {SlashCommandBuilder, PermissionFlagsBits} = require('discord.js');
-const {parseCSVFiles, affichageJoueur, checkDate, log, sanitizeString, getDbDate } = require("../utils/utils");
+const {parseCSVFiles, affichageJoueur, log, sanitizeString, getDbDate, isCurrentDateBetween } = require("../utils/utils");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -63,7 +63,7 @@ module.exports = {
             for (let i = 0; i < etudiant.length; i++) {
                 data = sanitizeString(etudiant[i][1]);
                 if (data.includes(option)) {
-                    finalResultString += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
+                    finalResultString += affichageJoueur(etudiant[i], isCurrentDateBetween(etudiant[i][2], etudiant[i][3], etudiant[i][0]));
                     numberOfStudentFind++;
                 }
             }
@@ -77,7 +77,7 @@ module.exports = {
             for (let i = 0; i < etudiant.length; i++) {
                 data = sanitizeString(etudiant[i][0]);
                 if (data.includes(option)) {
-                    finalResultString += affichageJoueur(etudiant[i], checkDate(etudiant[i][2]));
+                    finalResultString += affichageJoueur(etudiant[i], isCurrentDateBetween(etudiant[i][2], etudiant[i][3], etudiant[i][0]));
                     numberOfStudentFind++;
                 }
             }

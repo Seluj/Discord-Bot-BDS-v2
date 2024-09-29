@@ -1,5 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {parseCSVFiles, checkDate, getDbDate, checkRole} = require("../utils/utils");
+const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween} = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -77,7 +77,7 @@ module.exports = {
             j++;
         }
         if (trouve === true) {
-          if (checkDate(etudiant[j][2]) === true) {
+          if (isCurrentDateBetween(etudiant[j][2], etudiant[j][3], etudiant[j][0]) === true) {
             membersList[i].roles.add(Cotisants);
             membersList[i].roles.remove(Attente_Cotisant);
             nbCotisant++;
@@ -116,7 +116,7 @@ module.exports = {
             j++;
         }
         if (trouve === true) {
-          if (checkDate(etudiant[j][2]) === false) {
+          if (isCurrentDateBetween(etudiant[j][2], etudiant[j][3], etudiant[j][0]) === false) {
             membersList[i].roles.add(Attente_Cotisant);
             membersList[i].roles.remove(Cotisants);
             nbCotisant--;

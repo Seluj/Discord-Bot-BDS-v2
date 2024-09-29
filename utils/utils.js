@@ -88,52 +88,23 @@ function checkCharacter(name, characters) {
 }
 
 /**
- * Test si la date passée en paramètre est plus grande que la date du jour de lancement de la commande
- * @param date Date à vérifier
- * @returns {boolean} true si la date est plus grande que celle courante false sinon
+ * Check if the current date is between the start and end dates
+ * @param {string} startDate - The start date in the format YYYY-MM-DD
+ * @param {string} endDate - The end date in the format YYYY-MM-DD
+ * @param name - The lastname of the student
+ * @returns {boolean} - True if the current date is between the start and end dates, false otherwise
  */
-function checkDate(date) {
-  /*
-  let tmp = date.split(' ');
-  if (tmp[0] === "")
-    return false;
-  */
-  let tmp = date.split('-');
-  let year_cotis = tmp[0];
-  let month_cotis = tmp[1];
-  let day_cotis = tmp[2];
+function isCurrentDateBetween(startDate, endDate, name) {
+    const currentDate = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
-  let returned;
-  let today = new Date();
-  let day = String(today.getDate()).padStart(2, '0');
-  let month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  let year = today.getFullYear();
+    let returned = currentDate >= start && currentDate <= end;
 
-  day = parseInt(day);
-  month = parseInt(month);
-  year = parseInt(year);
-  day_cotis = parseInt(day_cotis);
-  month_cotis = parseInt(month_cotis);
-  year_cotis = parseInt(year_cotis);
-
-  if (year > year_cotis) {
-    returned = false;
-  } else {
-    if (year === year_cotis) {
-      if (month > month_cotis) {
-        returned = false;
-      } else {
-        if (month === month_cotis) {
-          returned = day <= day_cotis;
-        } else {
-          returned = true;
-        }
-      }
-    } else {
-      returned = true;
+    if (returned === false) {
+      log("Name", name, "CurrentDate:", currentDate, "StartDate:", start, "EndDate:", end, "Result:", currentDate >= start && currentDate <= end);
     }
-  }
-  return returned;
+    return returned;
 }
 
 /**
@@ -331,7 +302,7 @@ function convertDate(date) {
 }
 
 module.exports = {
-  checkDate,
+  isCurrentDateBetween,
   affichageJoueur,
   parseCSVFiles,
   checkRole,
