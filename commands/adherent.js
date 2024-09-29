@@ -1,5 +1,12 @@
 const {SlashCommandBuilder, PermissionFlagsBits} = require('discord.js');
-const {parseCSVFiles, affichageJoueur, log, sanitizeString, getDbDate, isCurrentDateBetween } = require("../utils/utils");
+const {
+    parseCSVFiles,
+    affichageJoueur,
+    log,
+    sanitizeString,
+    getDbDate,
+    isCurrentDateBetween
+} = require("../utils/utils");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -34,7 +41,7 @@ module.exports = {
         let numberOfStudentFind = 0;     // Nombre d'étudiants trouvé
 
 
-        const { logs } = require(`../serveur/channels/channels_${interaction.guild.id}.json`);
+        const {logs} = require(`../serveur/channels/channels_${interaction.guild.id}.json`);
         await interaction.reply({content: "Recherche en cours...", ephemeral: true});
 
         let channel_logs = null;
@@ -58,7 +65,10 @@ module.exports = {
         // Test pour la subCommand "prenom"
         if (interaction.options.getSubcommand() === "prénom") {
             option = interaction.options.getString('prénom');
-            await interaction.followUp({content: `Recherche du prénom : ${option}\n(Date base de données ${dbDate})`, ephemeral: true});
+            await interaction.followUp({
+                content: `Recherche du prénom : ${option}\n(Date base de données ${dbDate})`,
+                ephemeral: true
+            });
             option = sanitizeString(option);
             for (let i = 0; i < etudiant.length; i++) {
                 data = sanitizeString(etudiant[i][1]);
@@ -71,7 +81,10 @@ module.exports = {
             // Test pour la subCommand "nom"
         } else if (interaction.options.getSubcommand() === "nom") {
             option = interaction.options.getString('nom');
-            await interaction.followUp({content: `Recherche du nom : ${option}\n(Date base de données ${dbDate})`, ephemeral: true});
+            await interaction.followUp({
+                content: `Recherche du nom : ${option}\n(Date base de données ${dbDate})`,
+                ephemeral: true
+            });
             log(`Recherche du nom : ${option}`, channel_logs);
             option = sanitizeString(option);
             for (let i = 0; i < etudiant.length; i++) {

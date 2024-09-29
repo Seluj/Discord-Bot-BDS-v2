@@ -2,25 +2,25 @@ const fs = require("node:fs");
 const {parse} = require("csv-parse");
 const {resolve} = require("path");
 const excludeCharactere =
-  [
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "(", ")", " - ", "{", "}", "[", "]", ":",
-    "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😗", "🥰", "😘", "😍", "😎", "😋", "😊", "😉", "😙", "😚",
-    "☺", "🙂", "🤗", "🤩", "🤔", "🤨", "😮", "😥", "😣", "😏", "🙄", "😶", "😑", "😐", "🤐", "😯", "😪", "😫",
-    "🥱", "😴", "😌", "😛", "😜", "😝", "🤤", "😒", "😓", "😔", "😕", "🙃", "😤", "😟", "😞", "😖", "🙁", "☹",
-    "😲", "🤑", "😢", "😭", "😦", "😧", "😨", "😩", "🤯", "😬", "🥴", "😵", "🤪", "😳", "🥶", "🥵", "😱", "😰",
-    "😠", "😡", "🤬", "😷", "🤒", "🤕", "🤢", "🤮", "🤧", "😇", "🥳", "🥺", "🤠", "🤡", "🤥", "🤫", "💀", "👺",
-    "👹", "👿", "😈", "🤓", "🧐", "🤭", "☠", "👻", "👽", "👾", "🤖", "💩", "😺", "😸", "🐱", "👤", "😾", "😿",
-    "🙀", "😽", "😼", "😻", "😹", "🐱", "🏍", "🐱", "💻", "🐱", "🐉", "🐱", "👓", "🐱", "🚀", "🙈", "🙉", "🙊",
-    "🦊", "🦒", "🐯", "🦁", "🐱", "🐺", "🐶", "🐵", "🦝", "🐮", "🐷", "🐗", "🐭", "🐹", "🐰", "🐻", "🐲", "🐔",
-    "🦄", "🐴", "🦓", "🐸", "🐼", "🐨", "🐽", "🐾", "🐒", "🦍", "🦧", "🦮", "🦺", "🐩", "🐕", "🐈", "🐅", "🐆",
-    "🐎", "🦌", "🦏", "🦛", "🐪", "🐐", "🐑", "🐏", "🐖", "🐄", "🐃", "🐂", "🐫", "🦙", "🦘", "🦥", "🦨", "🦡",
-    "🐘", "🐁", "🐍", "🐢", "🐊", "🦎", "🐿", "🐇", "🦔", "🐀", "🐉", "🦕", "🦖", "🦦", "🦈", "🐬", "🐳", "🐋",
-    "🦀", "🦞", "🐙", "🦑", "🦐", "🐡", "🐠", "🐟", "🐚", "🦆", "🐓", "🦃", "🦅", "🕊", "🦢", "🦜", "🐣", "🐤",
-    "🐥", "🐧", "🐦", "🦉", "🦚", "🦩", "🦇", "🦋", "🐌", "🐛", "🦟", "🦗", "🐜", "🐝", "🗣", "🧞", "♂", "♀", "🦠",
-    "🕸", "🕷", "🦂", "🐞", "👥", "👁", "👀", "🦴", "🦷", "👅", "👄", "🤼", "️", "⛷", "🤺", "👣", "🦿", "🦾", "🧠",
-    "👯", "👩", "❤", "💑", "👨", "💏", "💋", "👧", "👦", "👪", "👭", "🏻", "🤝", "🏼", "🏽", "🏿", "🏾", "👫", "🧑", "👬",
-    "🧃", "🔥", "⛺"
-  ];
+    [
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "(", ")", " - ", "{", "}", "[", "]", ":",
+        "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😗", "🥰", "😘", "😍", "😎", "😋", "😊", "😉", "😙", "😚",
+        "☺", "🙂", "🤗", "🤩", "🤔", "🤨", "😮", "😥", "😣", "😏", "🙄", "😶", "😑", "😐", "🤐", "😯", "😪", "😫",
+        "🥱", "😴", "😌", "😛", "😜", "😝", "🤤", "😒", "😓", "😔", "😕", "🙃", "😤", "😟", "😞", "😖", "🙁", "☹",
+        "😲", "🤑", "😢", "😭", "😦", "😧", "😨", "😩", "🤯", "😬", "🥴", "😵", "🤪", "😳", "🥶", "🥵", "😱", "😰",
+        "😠", "😡", "🤬", "😷", "🤒", "🤕", "🤢", "🤮", "🤧", "😇", "🥳", "🥺", "🤠", "🤡", "🤥", "🤫", "💀", "👺",
+        "👹", "👿", "😈", "🤓", "🧐", "🤭", "☠", "👻", "👽", "👾", "🤖", "💩", "😺", "😸", "🐱", "👤", "😾", "😿",
+        "🙀", "😽", "😼", "😻", "😹", "🐱", "🏍", "🐱", "💻", "🐱", "🐉", "🐱", "👓", "🐱", "🚀", "🙈", "🙉", "🙊",
+        "🦊", "🦒", "🐯", "🦁", "🐱", "🐺", "🐶", "🐵", "🦝", "🐮", "🐷", "🐗", "🐭", "🐹", "🐰", "🐻", "🐲", "🐔",
+        "🦄", "🐴", "🦓", "🐸", "🐼", "🐨", "🐽", "🐾", "🐒", "🦍", "🦧", "🦮", "🦺", "🐩", "🐕", "🐈", "🐅", "🐆",
+        "🐎", "🦌", "🦏", "🦛", "🐪", "🐐", "🐑", "🐏", "🐖", "🐄", "🐃", "🐂", "🐫", "🦙", "🦘", "🦥", "🦨", "🦡",
+        "🐘", "🐁", "🐍", "🐢", "🐊", "🦎", "🐿", "🐇", "🦔", "🐀", "🐉", "🦕", "🦖", "🦦", "🦈", "🐬", "🐳", "🐋",
+        "🦀", "🦞", "🐙", "🦑", "🦐", "🐡", "🐠", "🐟", "🐚", "🦆", "🐓", "🦃", "🦅", "🕊", "🦢", "🦜", "🐣", "🐤",
+        "🐥", "🐧", "🐦", "🦉", "🦚", "🦩", "🦇", "🦋", "🐌", "🐛", "🦟", "🦗", "🐜", "🐝", "🗣", "🧞", "♂", "♀", "🦠",
+        "🕸", "🕷", "🦂", "🐞", "👥", "👁", "👀", "🦴", "🦷", "👅", "👄", "🤼", "️", "⛷", "🤺", "👣", "🦿", "🦾", "🧠",
+        "👯", "👩", "❤", "💑", "👨", "💏", "💋", "👧", "👦", "👪", "👭", "🏻", "🤝", "🏼", "🏽", "🏿", "🏾", "👫", "🧑", "👬",
+        "🧃", "🔥", "⛺"
+    ];
 const {readdir} = require('fs').promises;
 
 /**
@@ -30,19 +30,19 @@ const {readdir} = require('fs').promises;
  * @returns {*[]} data that is contains in the csv file
  */
 function parseCSVFiles(path, separator) {
-  let data = [];
-  fs.createReadStream(path)
-    .pipe(
-      parse({
-        delimiter: separator,
-        columns: false,
-        ltrim: true,
-      })
-    )
-    .on("data", function (row) {
-      data.push(row);
-    });
-  return data;
+    let data = [];
+    fs.createReadStream(path)
+        .pipe(
+            parse({
+                delimiter: separator,
+                columns: false,
+                ltrim: true,
+            })
+        )
+        .on("data", function (row) {
+            data.push(row);
+        });
+    return data;
 }
 
 /**
@@ -52,11 +52,11 @@ function parseCSVFiles(path, separator) {
  * @returns {boolean} retourne true si
  */
 function checkRole(etudiant, id_role) {
-  if (id_role === "null") {
-    return etudiant.roles.cache.size === 1;
-  } else {
-    return etudiant.roles.cache.some(role => role.id === id_role);
-  }
+    if (id_role === "null") {
+        return etudiant.roles.cache.size === 1;
+    } else {
+        return etudiant.roles.cache.some(role => role.id === id_role);
+    }
 }
 
 /**
@@ -65,27 +65,41 @@ function checkRole(etudiant, id_role) {
  * @returns {boolean} true si le nom corresponds false sinon
  */
 function checkName(name) {
-  let nb = name.split(' ');
-  if (nb.length >= 2) {
-    return checkCharacter(name, excludeCharactere);
-  } else {
-    return false;
-  }
+    let nb = name.split(' ');
+    if (nb.length >= 2) {
+        return checkCharacter(name, excludeCharactere);
+    } else {
+        return false;
+    }
 }
 
 function checkCharacter(name, characters) {
-  let returned = true;
-  if (Array.isArray(characters)) {
-    for (let i = 0; i < characters.length; i++) {
-      if (name.indexOf(characters[i]) !== -1)
-        returned = false;
+    let returned = true;
+    if (Array.isArray(characters)) {
+        for (let i = 0; i < characters.length; i++) {
+            if (name.indexOf(characters[i]) !== -1)
+                returned = false;
+        }
+    } else {
+        if (name.indexOf(characters) !== -1)
+            returned = false;
     }
-  } else {
-    if (name.indexOf(characters) !== -1)
-      returned = false;
-  }
-  return returned;
+    return returned;
 }
+
+/**
+ * Convertit une date en format YYYY-MM-DD en format DD/MM/YYYY
+ * @returns {string}
+ */
+Date.prototype.yyyymmdd = function() {
+    const mm = this.getMonth() + 1; // getMonth() is zero-based
+    const dd = this.getDate();
+
+    return [this.getFullYear(),
+        (mm>9 ? '' : '0') + mm,
+        (dd>9 ? '' : '0') + dd
+    ].join('-');
+};
 
 /**
  * Check if the current date is between the start and end dates
@@ -102,7 +116,7 @@ function isCurrentDateBetween(startDate, endDate, name) {
     let returned = currentDate >= start && currentDate <= end;
 
     if (returned === false) {
-      log("Name", name, "CurrentDate:", currentDate, "StartDate:", start, "EndDate:", end, "Result:", currentDate >= start && currentDate <= end);
+        log("Name:" + name + " CurrentDate:" + currentDate.yyyymmdd() + " StartDate:" + start.yyyymmdd() + " EndDate:" + end.yyyymmdd() + " Result:" + returned, null);
     }
     return returned;
 }
@@ -115,30 +129,30 @@ function isCurrentDateBetween(startDate, endDate, name) {
  * @returns {string} retourne la chaine de caractère pour affichage
  */
 function affichageJoueur(joueur, boolean) {
-  let returned;
-  let date = joueur[2].split(' ');
-  if (date[0] === "") {
-    date[0] = "null";
-  }
-  if (boolean === true) {
-    returned = `__Trouvé__:\n> **Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${convertDate(date[0])}**\n`;
-  } else {
-    returned = `__Trouvé__:\n> Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${convertDate(date[0])}\n`;
-  }
-  return returned;
+    let returned;
+    let date = joueur[2].split(' ');
+    if (date[0] === "") {
+        date[0] = "null";
+    }
+    if (boolean === true) {
+        returned = `__Trouvé__:\n> **Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${convertDate(date[0])}**\n`;
+    } else {
+        returned = `__Trouvé__:\n> Nom : ${joueur[0]}\n> Prénom : ${joueur[1]}\n> Date : ${convertDate(date[0])}\n`;
+    }
+    return returned;
 }
 
 function affichageMembre(membre) {
-  let returned;
-  returned = `__${membre.displayName}__:\n`;
-  let roleName = "";
-  membre.roles.cache.map(role => {
-    if (role.name !== "@everyone")
-      roleName += `> ${role}\n`;
-  })
-  returned += `Roles:\n${roleName}`;
-  returned += `\n`;
-  return returned;
+    let returned;
+    returned = `__${membre.displayName}__:\n`;
+    let roleName = "";
+    membre.roles.cache.map(role => {
+        if (role.name !== "@everyone")
+            roleName += `> ${role}\n`;
+    })
+    returned += `Roles:\n${roleName}`;
+    returned += `\n`;
+    return returned;
 }
 
 /**
@@ -147,18 +161,18 @@ function affichageMembre(membre) {
  * @returns {string} chaine modifiée
  */
 function replace(string) {
-  let returned = string;
-  for (let i = 0; i < returned.length; i++) {
-    if (returned[i] === ' ')
-      returned = replaceAt(returned, i, "_");
-    if (returned[i] === '-')
-      returned = replaceAt(returned, i, "_");
-    if (returned[i] === '@')
-      returned = replaceAt(returned, i, "");
-    if (returned[i] === "'")
-      returned = replaceAt(returned, i, "_");
-  }
-  return returned;
+    let returned = string;
+    for (let i = 0; i < returned.length; i++) {
+        if (returned[i] === ' ')
+            returned = replaceAt(returned, i, "_");
+        if (returned[i] === '-')
+            returned = replaceAt(returned, i, "_");
+        if (returned[i] === '@')
+            returned = replaceAt(returned, i, "");
+        if (returned[i] === "'")
+            returned = replaceAt(returned, i, "_");
+    }
+    return returned;
 }
 
 /**
@@ -169,154 +183,154 @@ function replace(string) {
  * @returns {string} chaine avec le caractère modifié
  */
 function replaceAt(str, index, chr) {
-  if (index > str.length - 1)
-    return str;
-  return str.substring(0, index) + chr + str.substring(index + 1);
+    if (index > str.length - 1)
+        return str;
+    return str.substring(0, index) + chr + str.substring(index + 1);
 }
 
 /**
  * Supprime tous les anciens fichiers pour éviter la multiplication et l'accumulation des données
  */
 function deleteOldestFiles() {
-  let dir = './serveur/';
-  if (!fs.existsSync(dir)) {
-    return;
-  }
+    let dir = './serveur/';
+    if (!fs.existsSync(dir)) {
+        return;
+    }
 
-  let pathRoles = './serveur/roles/';
-  let pathChannel = './serveur/channels/';
-  if (!fs.existsSync(pathRoles) || !fs.existsSync(pathChannel)) {
-    return;
-  }
+    let pathRoles = './serveur/roles/';
+    let pathChannel = './serveur/channels/';
+    if (!fs.existsSync(pathRoles) || !fs.existsSync(pathChannel)) {
+        return;
+    }
 
-  const roles_files = fs.readdirSync(pathRoles).filter(file => file.startsWith('role_'));
-  const channels_files = fs.readdirSync(pathChannel).filter(file => file.startsWith('channels_'));
-  for (let i = 0; i < roles_files.length; i++) {
-    fs.unlink(pathRoles + roles_files[i], (err) => {
-      if (err)
-        throw err;
-    });
-  }
-  for (let i = 0; i < channels_files.length; i++) {
-    fs.unlink(pathChannel + channels_files[i], (err) => {
-      if (err)
-        throw err;
-    })
-  }
-  log(`${roles_files.length} fichier(s) de rôles et ${channels_files.length} fichier(s) de salons ont été supprimé`);
+    const roles_files = fs.readdirSync(pathRoles).filter(file => file.startsWith('role_'));
+    const channels_files = fs.readdirSync(pathChannel).filter(file => file.startsWith('channels_'));
+    for (let i = 0; i < roles_files.length; i++) {
+        fs.unlink(pathRoles + roles_files[i], (err) => {
+            if (err)
+                throw err;
+        });
+    }
+    for (let i = 0; i < channels_files.length; i++) {
+        fs.unlink(pathChannel + channels_files[i], (err) => {
+            if (err)
+                throw err;
+        })
+    }
+    log(`${roles_files.length} fichier(s) de rôles et ${channels_files.length} fichier(s) de salons ont été supprimé`);
 }
 
 
 function log(message, channel_log) {
-  let dir = './logs/';
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-  let str = '';
-  let date = new Date();
-  let day = String(date.getDate()).padStart(2, '0');
-  let month = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-  let year = date.getFullYear();
-  let hour = String(date.getHours()).padStart(2, '0');
-  let minute = String(date.getMinutes()).padStart(2, '0');
-  let second = String(date.getSeconds()).padStart(2, '0');
+    let dir = './logs/';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+    let str = '';
+    let date = new Date();
+    let day = String(date.getDate()).padStart(2, '0');
+    let month = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let year = date.getFullYear();
+    let hour = String(date.getHours()).padStart(2, '0');
+    let minute = String(date.getMinutes()).padStart(2, '0');
+    let second = String(date.getSeconds()).padStart(2, '0');
 
-  str += '[' + day + '/' + month + '/' + year + ' ' + hour + ':' + minute + ':' + second + '] ' + message;
-  console.log(str);
-  fs.appendFileSync(dir + 'logTimed.txt', str + '\n');
-  fs.appendFileSync(dir + 'log.txt', message + '\n');
+    str += '[' + day + '/' + month + '/' + year + ' ' + hour + ':' + minute + ':' + second + '] ' + message;
+    console.log(str);
+    fs.appendFileSync(dir + 'logTimed.txt', str + '\n');
+    fs.appendFileSync(dir + 'log.txt', message + '\n');
 
-  if (channel_log !== undefined && channel_log !== null) {
-    channel_log.send(str);
-  }
+    if (channel_log !== undefined && channel_log !== null) {
+        channel_log.send(str);
+    }
 }
 
 async function* getFiles(dir) {
-  const dirents = await readdir(dir, {withFileTypes: true});
-  for (const dirent of dirents) {
-    const res = resolve(dir, dirent.name);
-    if (dirent.isDirectory()) {
-      yield* getFiles(res);
-    } else {
-      yield res;
+    const dirents = await readdir(dir, {withFileTypes: true});
+    for (const dirent of dirents) {
+        const res = resolve(dir, dirent.name);
+        if (dirent.isDirectory()) {
+            yield* getFiles(res);
+        } else {
+            yield res;
+        }
     }
-  }
 }
 
 function getRndInteger(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function sanitizeString(str) {
-  str = str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  return str;
+    str = str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return str;
 }
 
 function removeAllNonLetter(str) {
-  str = sanitizeString(str);
-  str = str.replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "");
-  return str;
+    str = sanitizeString(str);
+    str = str.replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "");
+    return str;
 }
 
 function toChannelName(str) {
-  let returnedString = "__" + str.replace(/\s/g, "-").replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase();
-  if (returnedString.length > 50) {
-    returnedString = returnedString.substring(0, 50);
-  }
-  returnedString += "__";
-  return returnedString;
+    let returnedString = "__" + str.replace(/\s/g, "-").replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase();
+    if (returnedString.length > 50) {
+        returnedString = returnedString.substring(0, 50);
+    }
+    returnedString += "__";
+    return returnedString;
 }
 
 function countNumberOfWordsInDictionary(str, dictionary) {
-  let count = 0;
-  let words = str.split(' ');
-  for (let word of words) {
-    let sanitizedWord = removeAllNonLetter(word);
-    if (dictionary[0].includes(sanitizedWord)) {
-      count += dictionary[1][dictionary[0].indexOf(sanitizedWord)];
+    let count = 0;
+    let words = str.split(' ');
+    for (let word of words) {
+        let sanitizedWord = removeAllNonLetter(word);
+        if (dictionary[0].includes(sanitizedWord)) {
+            count += dictionary[1][dictionary[0].indexOf(sanitizedWord)];
+        }
     }
-  }
-  return count;
+    return count;
 }
 
 function getDbDate(table) {
-  let dbDate;
-  let find = false;
-  let i = 0;
-  do {
-    if(table[i][1] === "Base de données") {
-      dbDate = table[i][2];
-      find = true;
-    }
-    i++;
-  } while (!find && i < table.length);
-  return convertDate(dbDate);
+    let dbDate;
+    let find = false;
+    let i = 0;
+    do {
+        if (table[i][1] === "Base de données") {
+            dbDate = table[i][2];
+            find = true;
+        }
+        i++;
+    } while (!find && i < table.length);
+    return convertDate(dbDate);
 }
 
 function convertDate(date) {
-  let tmp = date.split('-');
-  let year = tmp[0];
-  let month = tmp[1];
-  let day = tmp[2];
-  return `${day}/${month}/${year}`;
+    let tmp = date.split('-');
+    let year = tmp[0];
+    let month = tmp[1];
+    let day = tmp[2];
+    return `${day}/${month}/${year}`;
 }
 
 module.exports = {
-  isCurrentDateBetween,
-  affichageJoueur,
-  parseCSVFiles,
-  checkRole,
-  deleteOldestFiles,
-  replace,
-  checkName,
-  log,
-  getFiles,
-  affichageMembre,
-  getRndInteger,
-  sanitizeString,
-  removeAllNonLetter,
-  toChannelName,
-  countNumberOfWordsInDictionary,
-  getDbDate,
-  convertDate
+    isCurrentDateBetween,
+    affichageJoueur,
+    parseCSVFiles,
+    checkRole,
+    deleteOldestFiles,
+    replace,
+    checkName,
+    log,
+    getFiles,
+    affichageMembre,
+    getRndInteger,
+    sanitizeString,
+    removeAllNonLetter,
+    toChannelName,
+    countNumberOfWordsInDictionary,
+    getDbDate,
+    convertDate
 };
