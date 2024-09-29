@@ -27,7 +27,7 @@ async function makeChannelIfNotExistAndSendMessage(guild, user, message, log = n
     }
     createdChannel.send(`${message}\n${user}\nCe channel s'autodétruira dans 90 secondes.`);
     if (created) {
-        let timeout = setTimeout(function () {
+        setTimeout(function () {
             if (log != null)
                 log(`${createdChannel.name}, ${createdChannel.id} deleted`, channelLog);
             createdChannel.delete();
