@@ -113,12 +113,10 @@ function isCurrentDateBetween(startDate, endDate, name) {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    let returned = currentDate >= start && currentDate <= end;
-
-    if (returned === false) {
-        log("Name:" + name + " CurrentDate:" + currentDate.yyyymmdd() + " StartDate:" + start.yyyymmdd() + " EndDate:" + end.yyyymmdd() + " Result:" + returned, null);
-    }
-    return returned;
+    //if (returned === false) {
+    //    log("Name:" + name + " CurrentDate:" + currentDate.yyyymmdd() + " StartDate:" + start.yyyymmdd() + " EndDate:" + end.yyyymmdd() + " Result:" + returned, null);
+    //}
+    return currentDate >= start && currentDate <= end;
 }
 
 /**
