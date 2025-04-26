@@ -1,5 +1,5 @@
-const {SlashCommandBuilder} = require('discord.js');
-const {checkRole, getRndInteger} = require("../utils/utils");
+const {SlashCommandBuilder, MessageFlags} = require('discord.js');
+
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,55 +12,42 @@ module.exports = {
                 .setDescription('Le fichier à uploader')
                 .setRequired(true)),
     async execute(interaction) {
-        let membersList;
-        let nb_total = 0, nb_coti = 0, nb_non_coti = 0, nb_esta = 0, nb_reste = 0, nb_bot = 0;
+        await interaction.deferReply({flags: MessageFlags.Ephemeral});
+        const attachment = interaction.options.getAttachment('attachment');
+        if (attachment) {
+            const fileName = attachment.name;
+            const fileSize = attachment.size;
+            const fileUrl = attachment.url;
 
-        // Récupération des IDs des rôles
-        const {Cotisants, Attente_Cotisant, ESTA} = require(`../serveur/roles/role_${interaction.guild.id}.json`);
+            // Check if the file is a CSV
+            if (!fileName.endsWith('.csv')) {
+                await interaction.editReply({content: 'Le fichier doit être au format CSV.', flags: MessageFlags.Ephemeral});
+                return;
+            }
 
-        // Récupération des membres
-        interaction.guild.members.fetch()
-            .then((members) => {
-                membersList = members.map(m => m);
+            // Check if the file size is less than 8MB
+            if (fileSize > 8000000) {
+                await interaction.editReply({content: 'Le fichier doit faire moins de 8 Mo.', flags: MessageFlags.Ephemeral});
+                return;
+            }
 
-                // Comptage des membres en fonction de leur rôle Cotisant, Non Cotisant ou ESTA
-                for (let i = 0; i < membersList.length; i++) {
-                    nb_total++;
-                    if (checkRole(membersList[i], Cotisants))
-                        nb_coti++;
-                    else if (checkRole(membersList[i], Attente_Cotisant))
-                        nb_non_coti++;
-                    else if (checkRole(membersList[i], ESTA))
-                        nb_esta++;
-                    else if (membersList[i].user.bot)
-                        nb_bot++;
-                }
-
-                // Calcul du nombre de membres non renommés
-                nb_reste = nb_total - (nb_coti + nb_non_coti + nb_esta + nb_bot);
-
-                const cotisant = getRndInteger(1, 52);
-                const nomCotisant = getRndInteger(53, 63);
-                const emojis = require(`../emoji.json`);
-                const emojiCotisant = emojis[cotisant];
-                const emojiNonCotisant = emojis[nomCotisant];
-
-                // Envoi du message
-                interaction.reply(`Sur **${nb_total}** membres:\n> **${nb_coti}** sont cotisants\n> **${nb_non_coti}** sont non cotisants\n> **${nb_reste}** ne sont pas renommés\n> **${nb_esta}** sont de l'ESTA\n> **${nb_bot}** sont des bots\nMerci !`);
-
-                // Mise à jour des noms des channels
-                let channel = interaction.guild.channels.cache.get('1069747433950683208');
-                channel.setName(`${emojiCotisant} Cotisants : ${nb_coti}`);
-
-                channel = interaction.guild.channels.cache.get('1069748971100196986');
-                channel.setName(`${emojiNonCotisant} Non Cotisants : ${nb_non_coti}`);
-
-                channel = interaction.guild.channels.cache.get('1069934157662277723');
-                channel.setName(`💀 Unknown : ${nb_reste}`);
-
-                channel = interaction.guild.channels.cache.get('1069749123022061689');
-                channel.setName(`🌍 Total : ${nb_total - nb_bot}`);
-            })
-            .catch(console.error);
+            // Download the file and process it
+            await interaction.editReply({content: 'Fichier téléchargé avec succès !', flags: MessageFlags.Ephemeral});
+            // Upload the file in the root directory and rename it adherent.csv
+            const fs = require('fs');
+            const https = require('https');
+            const path = require('path');
+            const filePath = path.join(__dirname, '..', 'adherent.csv');
+            const file = fs.createWriteStream(filePath);
+            https.get(fileUrl, (response) => {
+                response.pipe(file);
+                file.on('finish', () => {
+                    file.close();
+                    console.log('File downloaded and saved as adherent.csv');
+                });
+            });
+        } else {
+            await interaction.editReply({content: 'Aucun fichier trouvé.', flags: MessageFlags.Ephemeral});
+        }
     },
 };
