@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('discord.js');
+const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 const {addRole, deleteRole} = require('../utils/roles');
 const {log} = require("../utils/utils");
 
@@ -101,7 +101,7 @@ module.exports = {
         let id = interaction.guild.roles.cache.find(role => role.name === sport);
         if (id === undefined) {
             // Le rôle n'existe pas, on envoie un message d'erreur
-            await interaction.reply({content: `Le rôle n'existe pas`, ephemeral: true});
+            await interaction.reply({content: `Le rôle n'existe pas`, flags: MessageFlags.Ephemeral});
             log(`Le rôle ${sport} n'existe pas`, channel_logs);
         } else {
             // Le rôle existe, on ajoute ou on supprime le rôle si le membre est cotisant
@@ -109,13 +109,13 @@ module.exports = {
             if (member.roles.cache.has(Cotisants) || member.roles.cache.has(Membre_du_Bureau) || member.roles.cache.has(ESTA)) {
                 if (member.roles.cache.has(id.id)) {
                     deleteRole(member, id);
-                    await interaction.reply({content: `Le rôle a été supprimé`, ephemeral: true});
+                    await interaction.reply({content: `Le rôle a été supprimé`, flags: MessageFlags.Ephemeral});
                 } else {
                     addRole(member, id);
-                    await interaction.reply({content: `Le rôle a été ajouté`, ephemeral: true});
+                    await interaction.reply({content: `Le rôle a été ajouté`, flags: MessageFlags.Ephemeral});
                 }
             } else {
-                await interaction.reply({content: `Vous n'avez pas le droit de modifier vos sports`, ephemeral: true});
+                await interaction.reply({content: `Vous n'avez pas le droit de modifier vos sports`, flags: MessageFlags.Ephemeral});
             }
         }
     },

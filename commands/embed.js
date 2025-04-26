@@ -1,4 +1,4 @@
-const {SlashCommandBuilder, AttachmentBuilder} = require('discord.js');
+const {SlashCommandBuilder, AttachmentBuilder, MessageFlags} = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,7 +18,7 @@ module.exports = {
         ),
     async execute(interaction) {
         if (interaction.options.getSubcommand() === "rule") {
-            interaction.reply({content: "Voici votre message:", ephemeral: true});
+            interaction.reply({content: "Voici votre message:", flags: MessageFlags.Ephemeral});
             const file = new AttachmentBuilder('./logo/logo1.png')
 
             const exampleEmbed = {
@@ -59,7 +59,7 @@ module.exports = {
                 sentMessage.react('👍');
             });
         } else if (interaction.options.getSubcommand() === "sport") {
-            interaction.reply({content: "Voici votre message:", ephemeral: true});
+            interaction.reply({content: "Voici votre message:", flags: MessageFlags.Ephemeral});
             const file = new AttachmentBuilder('./logo/logo1.png')
 
             const exampleEmbed = {

@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('discord.js');
+const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,14 +22,14 @@ module.exports = {
         if (role === null) {
             await interaction.reply({
                 content: `\n> 🏓La latence est de ${Date.now() - interaction.createdTimestamp} ms.\n> La latence avec l'API est de ${Math.round(interaction.client.ws.ping)} ms`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         } else {
 
             if (interaction.member.user.id !== "234255301728141314" || interaction.member.user.tag !== "jul.e.s") {
                 interaction.reply({
                     content: "Vous n'avez pas la permission d'utiliser cette commande",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
                 return;
             }

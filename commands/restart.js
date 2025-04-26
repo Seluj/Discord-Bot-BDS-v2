@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('discord.js');
+const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 const {log} = require('../utils/utils');
 
 
@@ -11,7 +11,7 @@ module.exports = {
 
         const {ligne_de_départ} = require(`../serveur/channels/channels_${interaction.guild.id}.json`);
         if (ligne_de_départ === undefined) {
-            interaction.reply({content: "ligne_de_départ n'existe pas", ephemeral: true});
+            interaction.reply({content: "ligne_de_départ n'existe pas", flags: MessageFlags.Ephemeral});
             return;
         }
 
@@ -33,6 +33,6 @@ module.exports = {
             channel = interaction.guild.channels.cache.get(commandes);
         }
 
-        interaction.reply({content: response, ephemeral: true});
+        interaction.reply({content: response, flags: MessageFlags.Ephemeral});
     },
 };

@@ -1,4 +1,4 @@
-const {SlashCommandBuilder, PermissionFlagsBits} = require('discord.js');
+const {SlashCommandBuilder, PermissionFlagsBits, MessageFlags} = require('discord.js');
 const {affichageMembre, log} = require("../utils/utils");
 
 module.exports = {
@@ -45,7 +45,7 @@ module.exports = {
             }
         });
 
-        await interaction.reply({content: `Recherche de : ${opt}`, ephemeral: true});
+        await interaction.reply({content: `Recherche de : ${opt}`, flags: MessageFlags.Ephemeral});
 
         str += `Nombre trouvé : ${nb}`;
 
@@ -59,7 +59,7 @@ module.exports = {
 
         // Écriture du résultat
         for (let i = 0; i < tmp_str.length; i++) {
-            await interaction.followUp({content: tmp_str[i], ephemeral: true});
+            await interaction.followUp({content: tmp_str[i], flags: MessageFlags.Ephemeral});
         }
     },
 };

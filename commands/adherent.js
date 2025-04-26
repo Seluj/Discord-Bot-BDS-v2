@@ -1,4 +1,4 @@
-const {SlashCommandBuilder, PermissionFlagsBits} = require('discord.js');
+const {SlashCommandBuilder, PermissionFlagsBits, MessageFlags} = require('discord.js');
 const {
     parseCSVFiles,
     affichageJoueur,
@@ -42,7 +42,7 @@ module.exports = {
 
 
         const {logs} = require(`../serveur/channels/channels_${interaction.guild.id}.json`);
-        await interaction.reply({content: "Recherche en cours...", ephemeral: true});
+        await interaction.reply({content: "Recherche en cours...", flags: MessageFlags.Ephemeral});
 
         let channel_logs = null;
         if (logs === undefined) {
@@ -67,7 +67,7 @@ module.exports = {
             option = interaction.options.getString('prénom');
             await interaction.followUp({
                 content: `Recherche du prénom : ${option}\n(Date base de données ${dbDate})`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
             option = sanitizeString(option);
             for (let i = 0; i < etudiant.length; i++) {
@@ -83,7 +83,7 @@ module.exports = {
             option = interaction.options.getString('nom');
             await interaction.followUp({
                 content: `Recherche du nom : ${option}\n(Date base de données ${dbDate})`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
             log(`Recherche du nom : ${option}`, channel_logs);
             option = sanitizeString(option);
@@ -107,7 +107,7 @@ module.exports = {
 
         // Écriture du résultat
         for (let i = 0; i < tmp_str.length; i++) {
-            await interaction.followUp({content: tmp_str[i], ephemeral: true});
+            await interaction.followUp({content: tmp_str[i], flags: MessageFlags.Ephemeral});
             log(tmp_str[i], channel_logs);
         }
     },

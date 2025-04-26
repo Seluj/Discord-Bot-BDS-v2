@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('discord.js');
+const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 const {log, checkRole} = require("../utils/utils");
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
     async execute(interaction) {
 
         if (interaction.member.user.id !== "234255301728141314" || interaction.member.user.tag !== "jul.e.s") {
-            interaction.reply({content: "Vous n'avez pas la permission d'utiliser cette commande", ephemeral: true});
+            interaction.reply({content: "Vous n'avez pas la permission d'utiliser cette commande", flags: MessageFlags.Ephemeral});
             return;
         }
 
