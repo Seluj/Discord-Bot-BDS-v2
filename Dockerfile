@@ -6,8 +6,9 @@ WORKDIR /usr/src/bot
 
 COPY package.json /usr/src/bot
 RUN npm install
+RUN npm install pm2@latest -g
 
 COPY . /usr/src/bot
 
 # Start the bot.
-CMD ["node", "index.js"]
+CMD ["pm2-runtime", "index.js"]

@@ -1,6 +1,5 @@
-version: '2'
-
 services:
-  man:
+  bot:
     build: .
     image: bds/bot:v2
+    restart: unless-stopped
