@@ -131,7 +131,7 @@ function isCurrentDateBetween(startDate, endDate, name) {
  */
 function affichageJoueur(joueur, boolean) {
     let returned;
-    let date = joueur[2].split(' ');
+    let date = joueur[3].split(' ');
     if (date[0] === "") {
         date[0] = "null";
     }
