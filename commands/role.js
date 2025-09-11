@@ -6,12 +6,10 @@ module.exports = {
         .setName('role')
         .setDescription('Modifie les rôles de chaque membre pour chaque rôle sinon donne le nombre du rôle donné')
         .setDefaultMemberPermissions(0)
-        .addRoleOption(option =>
-            option
-                .setName('role_id')
-                .setDescription('ID du role à chercher')
-                .setRequired(false)),
-    async execute(interaction) {
+        .addRoleOption(option => option
+            .setName('role_id')
+            .setDescription('ID du role à chercher')
+            .setRequired(false)), async execute(interaction) {
 
         //Variables
         let roleId = interaction.options.getRole('role_id');
@@ -57,20 +55,31 @@ module.exports = {
             await interaction.followUp(`En cours de traitement...`);
 
             for (let i = 0; i < membersID.length; i++) {
-                if (checkRole(membersList[i], Membre_du_Bureau))
-                    continue;
-                if (checkRole(membersList[i], ESTA))
-                    continue;
-                if (checkRole(membersList[i], exception))
-                    continue;
+                if (checkRole(membersList[i], Membre_du_Bureau)) continue;
+                if (checkRole(membersList[i], ESTA)) continue;
+                if (checkRole(membersList[i], exception)) continue;
 
                 pseudoDiscord = membersDisplayName[i];
-                pseudoDiscord = pseudoDiscord.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("---", "-").replace("--", "-");
+                pseudoDiscord = pseudoDiscord
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace("---", "-")
+                    .replace("--", "-")
+                    .replace("'", "")
+                    .replace("’", "");
                 let j = 0;
                 let trouve = false;
                 while (j < etudiant.length && trouve === false) {
                     studentName = etudiant[j][1] + ' ' + etudiant[j][0];
-                    studentName = studentName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("---", "-").replace("--", "-");
+                    studentName = studentName
+                        .toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .replace("---", "-")
+                        .replace("--", "-")
+                        .replace("'", "")
+                        .replace("’", "");
                     if (studentName === pseudoDiscord)
                         trouve = true;
                     else
@@ -96,24 +105,32 @@ module.exports = {
             nbCotisant += membersDisplayName.length;
 
             for (let i = 0; i < membersID.length; i++) {
-                if (checkRole(membersList[i], Membre_du_Bureau))
-                    continue;
-                if (checkRole(membersList[i], ESTA))
-                    continue;
-                if (checkRole(membersList[i], exception))
-                    continue;
+                if (checkRole(membersList[i], Membre_du_Bureau)) continue;
+                if (checkRole(membersList[i], ESTA)) continue;
+                if (checkRole(membersList[i], exception)) continue;
 
                 pseudoDiscord = membersDisplayName[i];
-                pseudoDiscord = pseudoDiscord.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("---", "-").replace("--", "-");
+                pseudoDiscord = pseudoDiscord
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace("---", "-")
+                    .replace("--", "-")
+                    .replace("'", "")
+                    .replace("’", "");
                 let j = 0;
                 let trouve = false;
                 while (j < etudiant.length && trouve === false) {
                     studentName = etudiant[j][1] + ' ' + etudiant[j][0];
-                    studentName = studentName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace("---", "-").replace("--", "-");
-                    if (studentName === pseudoDiscord)
-                        trouve = true;
-                    else
-                        j++;
+                    studentName = studentName
+                        .toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .replace("---", "-")
+                        .replace("--", "-")
+                        .replace("'", "")
+                        .replace("’", "");
+                    if (studentName === pseudoDiscord) trouve = true; else j++;
                 }
                 if (trouve === true) {
                     if (isCurrentDateBetween(etudiant[j][2], etudiant[j][3], etudiant[j][0]) === false) {
@@ -141,8 +158,7 @@ module.exports = {
                 .then((members) => {
                     let membersList = members.map(m => m);
                     for (let i = 0; i < membersList.length; i++) {
-                        if (checkRole(membersList[i], roleId.id))
-                            nbTotal++;
+                        if (checkRole(membersList[i], roleId.id)) nbTotal++;
                     }
                     interaction.editReply(`Il y a ${nbTotal} membres avec le role "${roleId.name}\nDate de la base : ${dbDate}"`);
                 })
