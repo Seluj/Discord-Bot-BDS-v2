@@ -1,5 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween} = require("../utils/utils");
+const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween, log} = require("../utils/utils");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -54,44 +54,36 @@ module.exports = {
 
             await interaction.followUp(`En cours de traitement...`);
 
-            for (let i = 0; i < membersID.length; i++) {
-                if (checkRole(membersList[i], Membre_du_Bureau)) continue;
-                if (checkRole(membersList[i], ESTA)) continue;
-                if (checkRole(membersList[i], exception)) continue;
+            const normalizeString = (str) => str
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace("---", "-")
+                .replace("--", "-")
+                .replace("'", "")
+                .replace("’", "");
 
-                pseudoDiscord = membersDisplayName[i];
-                pseudoDiscord = pseudoDiscord
-                    .toLowerCase()
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .replace("---", "-")
-                    .replace("--", "-")
-                    .replace("'", "")
-                    .replace("’", "");
-                let j = 0;
-                let trouve = false;
-                while (j < etudiant.length && trouve === false) {
-                    studentName = etudiant[j][1] + ' ' + etudiant[j][0];
-                    studentName = studentName
-                        .toLowerCase()
-                        .normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "")
-                        .replace("---", "-")
-                        .replace("--", "-")
-                        .replace("'", "")
-                        .replace("’", "");
-                    if (studentName === pseudoDiscord)
-                        trouve = true;
-                    else
-                        j++;
-                }
-                if (trouve === true) {
-                    if (isCurrentDateBetween(etudiant[j][2], etudiant[j][3], etudiant[j][0]) === true) {
-                        membersList[i].roles.add(Cotisants);
-                        membersList[i].roles.remove(Attente_Cotisant);
-                        nbCotisant++;
-                        nbNonCotisant--;
-                    }
+            // Traitement des membres
+            for (const member of membersList) {
+                // Ignorer les membres avec des rôles spéciaux
+                if (checkRole(member, Membre_du_Bureau) ||
+                    checkRole(member, ESTA) ||
+                    checkRole(member, exception)) continue;
+
+                const normalizedPseudo = normalizeString(member.displayName);
+
+                // Recherche de l'étudiant correspondant
+                const matchingStudent = etudiant.find(student => {
+                    const normalizedStudentName = normalizeString(`${student[1]} ${student[0]}`);
+                    return normalizedStudentName === normalizedPseudo;
+                });
+
+                // Si correspondance trouvée et date valide, mise à jour des rôles
+                if (matchingStudent && isCurrentDateBetween(matchingStudent[2], matchingStudent[3], matchingStudent[0])) {
+                    member.roles.add(Cotisants);
+                    member.roles.remove(Attente_Cotisant);
+                    nbCotisant++;
+                    nbNonCotisant--;
                 }
             }
 
@@ -104,44 +96,29 @@ module.exports = {
 
             nbCotisant += membersDisplayName.length;
 
-            for (let i = 0; i < membersID.length; i++) {
-                if (checkRole(membersList[i], Membre_du_Bureau)) continue;
-                if (checkRole(membersList[i], ESTA)) continue;
-                if (checkRole(membersList[i], exception)) continue;
+            // Traitement des membres cotisants
+            for (const member of membersList) {
+                // Ignorer les membres avec des rôles spéciaux
+                if (checkRole(member, Membre_du_Bureau) ||
+                    checkRole(member, ESTA) ||
+                    checkRole(member, exception)) continue;
 
-                pseudoDiscord = membersDisplayName[i];
-                pseudoDiscord = pseudoDiscord
-                    .toLowerCase()
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    .replace("---", "-")
-                    .replace("--", "-")
-                    .replace("'", "")
-                    .replace("’", "");
-                let j = 0;
-                let trouve = false;
-                while (j < etudiant.length && trouve === false) {
-                    studentName = etudiant[j][1] + ' ' + etudiant[j][0];
-                    studentName = studentName
-                        .toLowerCase()
-                        .normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "")
-                        .replace("---", "-")
-                        .replace("--", "-")
-                        .replace("'", "")
-                        .replace("’", "");
-                    if (studentName === pseudoDiscord) trouve = true; else j++;
-                }
-                if (trouve === true) {
-                    if (isCurrentDateBetween(etudiant[j][2], etudiant[j][3], etudiant[j][0]) === false) {
-                        membersList[i].roles.add(Attente_Cotisant);
-                        membersList[i].roles.remove(Cotisants);
-                        nbCotisant--;
-                        nbNonCotisant++;
-                    }
-                } else {
-                    membersList[i].roles.add(Attente_Cotisant);
-                    membersList[i].roles.remove(Cotisants);
+                const normalizedPseudo = normalizeString(member.displayName);
+
+                // Recherche de l'étudiant correspondant
+                const matchingStudent = etudiant.find(student => {
+                    const prenom = student[1];
+                    const nom = student[0];
+                    const normalizedStudentName = normalizeString(`${prenom} ${nom}`);
+
+                    return normalizedStudentName === normalizedPseudo;
+                });
+
+                // Si correspondance trouvée, mais date non valide OU si aucune correspondance
+                if ((matchingStudent && !isCurrentDateBetween(matchingStudent[2], matchingStudent[3], matchingStudent[0])) ||
+                    !matchingStudent) {
+                    member.roles.add(Attente_Cotisant);
+                    member.roles.remove(Cotisants);
                     nbCotisant--;
                     nbNonCotisant++;
                 }
