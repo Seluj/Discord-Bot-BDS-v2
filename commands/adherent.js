@@ -7,6 +7,7 @@ const {
     getDbDate,
     isCurrentDateBetween
 } = require("../utils/utils");
+const {ADHERENTS_FILE} = require("../utils/paths");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -33,7 +34,7 @@ module.exports = {
                         .setRequired(true))),
     async execute(interaction) {
         // Liste des étudiants contenus dans le fichier donné
-        let etudiant = parseCSVFiles("./adherent.csv", ";");
+        let etudiant = parseCSVFiles(ADHERENTS_FILE, ";");
         // Variables
         let option;        // option : option entrée par l'utilisateur
         let data;       // information à comparer avec l'option, récupérée dans le fichier des étudiants

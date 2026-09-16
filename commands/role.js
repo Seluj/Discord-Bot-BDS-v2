@@ -1,5 +1,6 @@
 const {SlashCommandBuilder} = require('discord.js');
 const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween, log} = require("../utils/utils");
+const {ADHERENTS_FILE} = require("../utils/paths");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,7 +14,7 @@ module.exports = {
 
         //Variables
         let roleId = interaction.options.getRole('role_id');
-        let etudiant = parseCSVFiles("./adherent.csv", ";");
+        let etudiant = parseCSVFiles(ADHERENTS_FILE, ";");
         await interaction.deferReply();
 
         let dbDate = getDbDate(etudiant);

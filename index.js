@@ -1,8 +1,13 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {Client, Collection, Partials} = require('discord.js');
+const {ensureDataDir} = require('./utils/paths');
+const {startApiServer} = require('./api/server');
 dotenv = require('dotenv');
 dotenv.config();
+
+// Le volume de données doit exister avant qu'une commande ou l'API n'y écrive.
+ensureDataDir();
 
 const client = new Client({
     intents: [3276799],
@@ -35,5 +40,8 @@ for (const file of eventFiles) {
         client.on(event.name, (...arg) => event.execute(...arg));
     }
 }
+
+// L'API n'est montée que si `API_TOKEN` est fourni ; voir api/server.js.
+startApiServer();
 
 client.login(process.env.BOT_TOKEN);

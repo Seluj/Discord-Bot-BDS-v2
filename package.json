@@ -1,4 +1,16 @@
 {
+  "name": "discord-bot-bds-v2",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Bot Discord du BDS de l'ESTA",
+  "main": "index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "deploy:commands": "node deploy_commands.js"
+  },
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
     "bufferutil": "^4.0.8",

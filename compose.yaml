@@ -1,5 +1,0 @@
-services:
-  bot:
-    build: .
-    image: bds/bot:v2
-    restart: unless-stopped
