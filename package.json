@@ -1,6 +1,6 @@
 {
   "name": "discord-bot-bds-v2",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "description": "Bot Discord du BDS de l'ESTA",
   "main": "index.js",
