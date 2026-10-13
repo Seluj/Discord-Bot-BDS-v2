@@ -1,5 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween, normalizeName, log} = require("../utils/utils");
+const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween, normalizeName} = require("../utils/utils");
 const {ADHERENTS_FILE} = require("../utils/paths");
 
 module.exports = {
