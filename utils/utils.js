@@ -1,5 +1,5 @@
 const fs = require("node:fs");
-const {parse} = require("csv-parse");
+const {parse} = require("csv-parse/sync");
 const {resolve} = require("path");
 const excludeCharactere =
     [
@@ -28,24 +28,22 @@ const {readdir} = require('fs').promises;
 
 /**
  * Parse CSV files function
+ *
+ * Lecture synchrone : les commandes exploitent le tableau juste après l'appel,
+ * une lecture en flux le renverrait encore vide (ou incomplet).
  * @param path where to find the csv file
  * @param separator separator to parse
  * @returns {*[]} data that is contains in the csv file
  */
 function parseCSVFiles(path, separator) {
-    let data = [];
-    fs.createReadStream(path)
-        .pipe(
-            parse({
-                delimiter: separator,
-                columns: false,
-                ltrim: true,
-            })
-        )
-        .on("data", function (row) {
-            data.push(row);
-        });
-    return data;
+    return parse(fs.readFileSync(path, 'utf8'), {
+        bom: true,
+        delimiter: separator,
+        columns: false,
+        trim: true,
+        skip_empty_lines: true,
+        relax_column_count: true,
+    });
 }
 
 /**
@@ -267,6 +265,28 @@ function sanitizeString(str) {
     return str;
 }
 
+/**
+ * Lettres que la décomposition Unicode ne ramène pas à l'ASCII.
+ */
+const SPECIAL_LETTERS = {"œ": "oe", "æ": "ae", "ß": "ss", "ø": "o", "ł": "l", "đ": "d", "ð": "d", "þ": "th", "ı": "i"};
+
+/**
+ * Normalise un nom pour le comparer : insensible à la casse, aux accents, aux
+ * polices « fantaisie » (𝐉𝐮𝐥𝐞𝐬, ｊｕｌｅｓ...) et à la ponctuation.
+ * Les séparateurs (espaces, tirets, apostrophes...) sont supprimés, si bien que
+ * « Marie-Laure », « marie laure » et « MarieLaure » donnent tous « marielaure ».
+ * @param str chaine à normaliser
+ * @returns {string} chaine normalisée (lettres et chiffres uniquement)
+ */
+function normalizeName(str) {
+    return String(str ?? "")
+        .normalize("NFKD")
+        .replace(/\p{M}/gu, "")
+        .toLowerCase()
+        .replace(/[œæßøłđðþı]/g, c => SPECIAL_LETTERS[c])
+        .replace(/[^\p{L}\p{N}]/gu, "");
+}
+
 function removeAllNonLetter(str) {
     str = sanitizeString(str);
     str = str.replace(/[.,\/#!$%^&*;:{}=\-_`~()]/g, "");
@@ -295,17 +315,11 @@ function countNumberOfWordsInDictionary(str, dictionary) {
 }
 
 function getDbDate(table) {
-    let dbDate;
-    let find = false;
-    let i = 0;
-    do {
-        if (table[i][1] === "Base de données") {
-            dbDate = table[i][2];
-            find = true;
-        }
-        i++;
-    } while (!find && i < table.length);
-    return convertDate(dbDate);
+    const row = table.find(r => r[1] === "Base de données");
+    if (row === undefined || !row[2]) {
+        return null;
+    }
+    return convertDate(row[2]);
 }
 
 function convertDate(date) {
@@ -325,11 +339,9 @@ module.exports = {
     replace,
     checkName,
     log,
-    getFiles,
     affichageMembre,
     getRndInteger,
-    sanitizeString,
-    removeAllNonLetter,
+    normalizeName,
     toChannelName,
     countNumberOfWordsInDictionary,
     getDbDate,

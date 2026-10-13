@@ -1,5 +1,5 @@
 const {SlashCommandBuilder, PermissionFlagsBits, MessageFlags} = require('discord.js');
-const {affichageMembre, log} = require("../utils/utils");
+const {affichageMembre, normalizeName, log} = require("../utils/utils");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -32,20 +32,18 @@ module.exports = {
 
         // Test pour la subCommand "prenom"
         opt = interaction.options.getString('option');
-        opt = opt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-        interaction.guild.members.fetch().then(members => {
-            const membreListe = members.map(m => m);
-            for (const member of membreListe) {
-                displayName = member.displayName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                if (displayName.includes(opt)) {
-                    nb++;
-                    str += affichageMembre(member);
-                }
-            }
-        });
-
         await interaction.reply({content: `Recherche de : ${opt}`, flags: MessageFlags.Ephemeral});
+        opt = normalizeName(opt);
+
+        // On attend le chargement des membres avant de construire le résultat.
+        const members = await interaction.guild.members.fetch();
+        for (const member of members.values()) {
+            displayName = normalizeName(member.displayName);
+            if (opt !== "" && displayName.includes(opt)) {
+                nb++;
+                str += affichageMembre(member);
+            }
+        }
 
         str += `Nombre trouvé : ${nb}`;
 

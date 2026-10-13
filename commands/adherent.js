@@ -3,7 +3,7 @@ const {
     parseCSVFiles,
     affichageJoueur,
     log,
-    sanitizeString,
+    normalizeName,
     getDbDate,
     isCurrentDateBetween
 } = require("../utils/utils");
@@ -70,10 +70,10 @@ module.exports = {
                 content: `Recherche du prénom : ${option}\n(Date base de données ${dbDate})`,
                 flags: MessageFlags.Ephemeral
             });
-            option = sanitizeString(option);
+            option = normalizeName(option);
             for (let i = 0; i < etudiant.length; i++) {
-                data = sanitizeString(etudiant[i][1]);
-                if (data.includes(option)) {
+                data = normalizeName(etudiant[i][1]);
+                if (option !== "" && data.includes(option)) {
                     finalResultString += affichageJoueur(etudiant[i], isCurrentDateBetween(etudiant[i][2], etudiant[i][3], etudiant[i][0]));
                     numberOfStudentFind++;
                 }
@@ -87,10 +87,10 @@ module.exports = {
                 flags: MessageFlags.Ephemeral
             });
             log(`Recherche du nom : ${option}`, channel_logs);
-            option = sanitizeString(option);
+            option = normalizeName(option);
             for (let i = 0; i < etudiant.length; i++) {
-                data = sanitizeString(etudiant[i][0]);
-                if (data.includes(option)) {
+                data = normalizeName(etudiant[i][0]);
+                if (option !== "" && data.includes(option)) {
                     finalResultString += affichageJoueur(etudiant[i], isCurrentDateBetween(etudiant[i][2], etudiant[i][3], etudiant[i][0]));
                     numberOfStudentFind++;
                 }

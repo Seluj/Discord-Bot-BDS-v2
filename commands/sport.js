@@ -1,6 +1,6 @@
 const {SlashCommandBuilder, MessageFlags} = require('discord.js');
 const {addRole, deleteRole} = require('../utils/roles');
-const {log} = require("../utils/utils");
+const {log, normalizeName} = require("../utils/utils");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -98,7 +98,7 @@ module.exports = {
         }
 
         // Vérification de l'existence du rôle et récupération de son ID
-        let id = interaction.guild.roles.cache.find(role => role.name === sport);
+        let id = interaction.guild.roles.cache.find(role => normalizeName(role.name) === normalizeName(sport));
         if (id === undefined) {
             // Le rôle n'existe pas, on envoie un message d'erreur
             await interaction.reply({content: `Le rôle n'existe pas`, flags: MessageFlags.Ephemeral});

@@ -1,5 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
-const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween, log} = require("../utils/utils");
+const {parseCSVFiles, getDbDate, checkRole, isCurrentDateBetween, normalizeName, log} = require("../utils/utils");
 const {ADHERENTS_FILE} = require("../utils/paths");
 
 module.exports = {
@@ -45,6 +45,9 @@ module.exports = {
                 exception,          // Les membres qui ne sont pas pris en compte
             } = require(`../serveur/roles/role_${interaction.guild.id}.json`);
 
+            // Le cache ne contient pas forcément tous les membres : on les charge tous.
+            await interaction.guild.members.fetch();
+
             membersWithRole = interaction.guild.roles.cache.get(Attente_Cotisant).members;
 
             membersID = membersWithRole.map(m => m.id);
@@ -55,14 +58,16 @@ module.exports = {
 
             await interaction.followUp(`En cours de traitement...`);
 
-            const normalizeString = (str) => str
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace("---", "-")
-                .replace("--", "-")
-                .replace("'", "")
-                .replace("’", "");
+            const studentsByName = new Map();
+            for (const student of etudiant) {
+                if (student.length < 4) continue;
+                const key = normalizeName(`${student[1]} ${student[0]}`);
+                const known = studentsByName.get(key);
+                if (!known || !isCurrentDateBetween(known[2], known[3], known[0])) {
+                    studentsByName.set(key, student);
+                }
+            }
+            const findStudent = (member) => studentsByName.get(normalizeName(member.displayName));
 
             // Traitement des membres
             for (const member of membersList) {
@@ -71,13 +76,8 @@ module.exports = {
                     checkRole(member, ESTA) ||
                     checkRole(member, exception)) continue;
 
-                const normalizedPseudo = normalizeString(member.displayName);
-
                 // Recherche de l'étudiant correspondant
-                const matchingStudent = etudiant.find(student => {
-                    const normalizedStudentName = normalizeString(`${student[1]} ${student[0]}`);
-                    return normalizedStudentName === normalizedPseudo;
-                });
+                const matchingStudent = findStudent(member);
 
                 // Si correspondance trouvée et date valide, mise à jour des rôles
                 if (matchingStudent && isCurrentDateBetween(matchingStudent[2], matchingStudent[3], matchingStudent[0])) {
@@ -104,16 +104,8 @@ module.exports = {
                     checkRole(member, ESTA) ||
                     checkRole(member, exception)) continue;
 
-                const normalizedPseudo = normalizeString(member.displayName);
-
                 // Recherche de l'étudiant correspondant
-                const matchingStudent = etudiant.find(student => {
-                    const prenom = student[1];
-                    const nom = student[0];
-                    const normalizedStudentName = normalizeString(`${prenom} ${nom}`);
-
-                    return normalizedStudentName === normalizedPseudo;
-                });
+                const matchingStudent = findStudent(member);
 
                 // Si correspondance trouvée, mais date non valide OU si aucune correspondance
                 if ((matchingStudent && !isCurrentDateBetween(matchingStudent[2], matchingStudent[3], matchingStudent[0])) ||
@@ -131,16 +123,9 @@ module.exports = {
 
 
         } else {
-            let nbTotal;
-            interaction.guild.members.fetch()
-                .then((members) => {
-                    let membersList = members.map(m => m);
-                    for (let i = 0; i < membersList.length; i++) {
-                        if (checkRole(membersList[i], roleId.id)) nbTotal++;
-                    }
-                    interaction.editReply(`Il y a ${nbTotal} membres avec le role "${roleId.name}\nDate de la base : ${dbDate}"`);
-                })
-                .catch(console.error);
+            const members = await interaction.guild.members.fetch();
+            const nbTotal = members.filter(m => checkRole(m, roleId.id)).size;
+            await interaction.editReply(`Il y a ${nbTotal} membres avec le role "${roleId.name}"\nDate de la base : ${dbDate}`);
         }
     },
 };
