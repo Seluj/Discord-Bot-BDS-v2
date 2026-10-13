@@ -1,6 +1,5 @@
 const fs = require("node:fs");
 const {parse} = require("csv-parse/sync");
-const {resolve} = require("path");
 const excludeCharactere =
     [
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "/", "(", ")", " - ", "{", "}", "[", "]", ":",
@@ -24,7 +23,6 @@ const excludeCharactere =
         "🇧🇫", "🇧🇬", "🇧🇭", "🇧🇮", "🇧🇯", "🇧🇱", "🇧🇲", "🇧🇳", "🇧🇴", "🇧🇶", "🇧🇷", "🇧🇸", "🇧🇹", "🇻🇬", "🇻🇨",
         "🇻🇪", "🇻🇺", "🇾🇪", "🇾🇹", "🇿🇦", "🇿🇲", "🇿🇼", "🇦🇴", "🇦🇶", "🇦🇷", "🇦🇸", "🇧🇧", "🇧🇩", "🇧🇪", "🎾", "🏀", "🏐", "🎮"
     ];
-const {readdir} = require('fs').promises;
 
 /**
  * Parse CSV files function
